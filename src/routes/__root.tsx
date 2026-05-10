@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { ThemeProvider } from "../components/theme-provider";
 
 function NotFoundComponent() {
   return (
@@ -72,14 +73,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "FaceTime SaaS — Super Admin" },
+      { name: "description", content: "Super Admin console for FaceTime cloud-based Face Recognition Time Attendance software." },
+      { name: "author", content: "FaceTime" },
+      { property: "og:title", content: "FaceTime SaaS — Super Admin" },
+      { property: "og:description", content: "Manage subscribers, subscriptions, modules, devices, invoices and renewals." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -113,7 +113,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <ThemeProvider>
+        <Outlet />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
