@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppSubscribersIndexRouteImport } from './routes/_app.subscribers.index'
+import { Route as AppSubscribersNewRouteImport } from './routes/_app.subscribers.new'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -27,27 +28,40 @@ const AppSubscribersIndexRoute = AppSubscribersIndexRouteImport.update({
   path: '/subscribers/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSubscribersNewRoute = AppSubscribersNewRouteImport.update({
+  id: '/subscribers/new',
+  path: '/subscribers/new',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/subscribers/new': typeof AppSubscribersNewRoute
   '/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
+  '/subscribers/new': typeof AppSubscribersNewRoute
   '/subscribers': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_app/': typeof AppIndexRoute
+  '/_app/subscribers/new': typeof AppSubscribersNewRoute
   '/_app/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/subscribers/'
+  fullPaths: '/' | '/subscribers/new' | '/subscribers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/subscribers'
-  id: '__root__' | '/_app' | '/_app/' | '/_app/subscribers/'
+  to: '/' | '/subscribers/new' | '/subscribers'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/'
+    | '/_app/subscribers/new'
+    | '/_app/subscribers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,16 +91,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSubscribersIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/subscribers/new': {
+      id: '/_app/subscribers/new'
+      path: '/subscribers/new'
+      fullPath: '/subscribers/new'
+      preLoaderRoute: typeof AppSubscribersNewRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppSubscribersNewRoute: typeof AppSubscribersNewRoute
   AppSubscribersIndexRoute: typeof AppSubscribersIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppSubscribersNewRoute: AppSubscribersNewRoute,
   AppSubscribersIndexRoute: AppSubscribersIndexRoute,
 }
 
@@ -98,3 +121,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
