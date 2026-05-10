@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppPlansRouteImport } from './routes/_app.plans'
+import { Route as AppModulesRouteImport } from './routes/_app.modules'
 import { Route as AppSubscribersIndexRouteImport } from './routes/_app.subscribers.index'
 import { Route as AppSubscribersNewRouteImport } from './routes/_app.subscribers.new'
 import { Route as AppSubscribersIdRouteImport } from './routes/_app.subscribers.$id'
@@ -28,6 +29,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppPlansRoute = AppPlansRouteImport.update({
   id: '/plans',
   path: '/plans',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppModulesRoute = AppModulesRouteImport.update({
+  id: '/modules',
+  path: '/modules',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSubscribersIndexRoute = AppSubscribersIndexRouteImport.update({
@@ -48,12 +54,14 @@ const AppSubscribersIdRoute = AppSubscribersIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/modules': typeof AppModulesRoute
   '/plans': typeof AppPlansRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
   '/subscribers/new': typeof AppSubscribersNewRoute
   '/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesByTo {
+  '/modules': typeof AppModulesRoute
   '/plans': typeof AppPlansRoute
   '/': typeof AppIndexRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
@@ -63,6 +71,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
+  '/_app/modules': typeof AppModulesRoute
   '/_app/plans': typeof AppPlansRoute
   '/_app/': typeof AppIndexRoute
   '/_app/subscribers/$id': typeof AppSubscribersIdRoute
@@ -73,15 +82,23 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/modules'
     | '/plans'
     | '/subscribers/$id'
     | '/subscribers/new'
     | '/subscribers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/plans' | '/' | '/subscribers/$id' | '/subscribers/new' | '/subscribers'
+  to:
+    | '/modules'
+    | '/plans'
+    | '/'
+    | '/subscribers/$id'
+    | '/subscribers/new'
+    | '/subscribers'
   id:
     | '__root__'
     | '/_app'
+    | '/_app/modules'
     | '/_app/plans'
     | '/_app/'
     | '/_app/subscribers/$id'
@@ -116,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlansRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/modules': {
+      id: '/_app/modules'
+      path: '/modules'
+      fullPath: '/modules'
+      preLoaderRoute: typeof AppModulesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/subscribers/': {
       id: '/_app/subscribers/'
       path: '/subscribers'
@@ -141,6 +165,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppModulesRoute: typeof AppModulesRoute
   AppPlansRoute: typeof AppPlansRoute
   AppIndexRoute: typeof AppIndexRoute
   AppSubscribersIdRoute: typeof AppSubscribersIdRoute
@@ -149,6 +174,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppModulesRoute: AppModulesRoute,
   AppPlansRoute: AppPlansRoute,
   AppIndexRoute: AppIndexRoute,
   AppSubscribersIdRoute: AppSubscribersIdRoute,
