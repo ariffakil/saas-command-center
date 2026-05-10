@@ -9,61 +9,373 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppQuotationsRouteImport } from './routes/_app.quotations'
+import { Route as AppPlansRouteImport } from './routes/_app.plans'
+import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
+import { Route as AppModulesRouteImport } from './routes/_app.modules'
+import { Route as AppLimitsRouteImport } from './routes/_app.limits'
+import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
+import { Route as AppDevicesRouteImport } from './routes/_app.devices'
+import { Route as AppBranchesRouteImport } from './routes/_app.branches'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
+import { Route as AppActivityRouteImport } from './routes/_app.activity'
+import { Route as AppSubscribersIndexRouteImport } from './routes/_app.subscribers.index'
+import { Route as AppSubscribersNewRouteImport } from './routes/_app.subscribers.new'
+import { Route as AppSubscribersIdRouteImport } from './routes/_app.subscribers.$id'
 
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuotationsRoute = AppQuotationsRouteImport.update({
+  id: '/quotations',
+  path: '/quotations',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlansRoute = AppPlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppModulesRoute = AppModulesRouteImport.update({
+  id: '/modules',
+  path: '/modules',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLimitsRoute = AppLimitsRouteImport.update({
+  id: '/limits',
+  path: '/limits',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesRoute = AppInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDevicesRoute = AppDevicesRouteImport.update({
+  id: '/devices',
+  path: '/devices',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBranchesRoute = AppBranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppActivityRoute = AppActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubscribersIndexRoute = AppSubscribersIndexRouteImport.update({
+  id: '/subscribers/',
+  path: '/subscribers/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubscribersNewRoute = AppSubscribersNewRouteImport.update({
+  id: '/subscribers/new',
+  path: '/subscribers/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubscribersIdRoute = AppSubscribersIdRouteImport.update({
+  id: '/subscribers/$id',
+  path: '/subscribers/$id',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AppIndexRoute
+  '/activity': typeof AppActivityRoute
+  '/alerts': typeof AppAlertsRoute
+  '/branches': typeof AppBranchesRoute
+  '/devices': typeof AppDevicesRoute
+  '/invoices': typeof AppInvoicesRoute
+  '/limits': typeof AppLimitsRoute
+  '/modules': typeof AppModulesRoute
+  '/payments': typeof AppPaymentsRoute
+  '/plans': typeof AppPlansRoute
+  '/quotations': typeof AppQuotationsRoute
+  '/settings': typeof AppSettingsRoute
+  '/subscribers/$id': typeof AppSubscribersIdRoute
+  '/subscribers/new': typeof AppSubscribersNewRoute
+  '/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/activity': typeof AppActivityRoute
+  '/alerts': typeof AppAlertsRoute
+  '/branches': typeof AppBranchesRoute
+  '/devices': typeof AppDevicesRoute
+  '/invoices': typeof AppInvoicesRoute
+  '/limits': typeof AppLimitsRoute
+  '/modules': typeof AppModulesRoute
+  '/payments': typeof AppPaymentsRoute
+  '/plans': typeof AppPlansRoute
+  '/quotations': typeof AppQuotationsRoute
+  '/settings': typeof AppSettingsRoute
+  '/': typeof AppIndexRoute
+  '/subscribers/$id': typeof AppSubscribersIdRoute
+  '/subscribers/new': typeof AppSubscribersNewRoute
+  '/subscribers': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/activity': typeof AppActivityRoute
+  '/_app/alerts': typeof AppAlertsRoute
+  '/_app/branches': typeof AppBranchesRoute
+  '/_app/devices': typeof AppDevicesRoute
+  '/_app/invoices': typeof AppInvoicesRoute
+  '/_app/limits': typeof AppLimitsRoute
+  '/_app/modules': typeof AppModulesRoute
+  '/_app/payments': typeof AppPaymentsRoute
+  '/_app/plans': typeof AppPlansRoute
+  '/_app/quotations': typeof AppQuotationsRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/subscribers/$id': typeof AppSubscribersIdRoute
+  '/_app/subscribers/new': typeof AppSubscribersNewRoute
+  '/_app/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/activity'
+    | '/alerts'
+    | '/branches'
+    | '/devices'
+    | '/invoices'
+    | '/limits'
+    | '/modules'
+    | '/payments'
+    | '/plans'
+    | '/quotations'
+    | '/settings'
+    | '/subscribers/$id'
+    | '/subscribers/new'
+    | '/subscribers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/activity'
+    | '/alerts'
+    | '/branches'
+    | '/devices'
+    | '/invoices'
+    | '/limits'
+    | '/modules'
+    | '/payments'
+    | '/plans'
+    | '/quotations'
+    | '/settings'
+    | '/'
+    | '/subscribers/$id'
+    | '/subscribers/new'
+    | '/subscribers'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/activity'
+    | '/_app/alerts'
+    | '/_app/branches'
+    | '/_app/devices'
+    | '/_app/invoices'
+    | '/_app/limits'
+    | '/_app/modules'
+    | '/_app/payments'
+    | '/_app/plans'
+    | '/_app/quotations'
+    | '/_app/settings'
+    | '/_app/'
+    | '/_app/subscribers/$id'
+    | '/_app/subscribers/new'
+    | '/_app/subscribers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quotations': {
+      id: '/_app/quotations'
+      path: '/quotations'
+      fullPath: '/quotations'
+      preLoaderRoute: typeof AppQuotationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/plans': {
+      id: '/_app/plans'
+      path: '/plans'
+      fullPath: '/plans'
+      preLoaderRoute: typeof AppPlansRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/payments': {
+      id: '/_app/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/modules': {
+      id: '/_app/modules'
+      path: '/modules'
+      fullPath: '/modules'
+      preLoaderRoute: typeof AppModulesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/limits': {
+      id: '/_app/limits'
+      path: '/limits'
+      fullPath: '/limits'
+      preLoaderRoute: typeof AppLimitsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/invoices': {
+      id: '/_app/invoices'
+      path: '/invoices'
+      fullPath: '/invoices'
+      preLoaderRoute: typeof AppInvoicesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/devices': {
+      id: '/_app/devices'
+      path: '/devices'
+      fullPath: '/devices'
+      preLoaderRoute: typeof AppDevicesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/branches': {
+      id: '/_app/branches'
+      path: '/branches'
+      fullPath: '/branches'
+      preLoaderRoute: typeof AppBranchesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/activity': {
+      id: '/_app/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AppActivityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/subscribers/': {
+      id: '/_app/subscribers/'
+      path: '/subscribers'
+      fullPath: '/subscribers/'
+      preLoaderRoute: typeof AppSubscribersIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/subscribers/new': {
+      id: '/_app/subscribers/new'
+      path: '/subscribers/new'
+      fullPath: '/subscribers/new'
+      preLoaderRoute: typeof AppSubscribersNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/subscribers/$id': {
+      id: '/_app/subscribers/$id'
+      path: '/subscribers/$id'
+      fullPath: '/subscribers/$id'
+      preLoaderRoute: typeof AppSubscribersIdRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  AppActivityRoute: typeof AppActivityRoute
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppBranchesRoute: typeof AppBranchesRoute
+  AppDevicesRoute: typeof AppDevicesRoute
+  AppInvoicesRoute: typeof AppInvoicesRoute
+  AppLimitsRoute: typeof AppLimitsRoute
+  AppModulesRoute: typeof AppModulesRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
+  AppPlansRoute: typeof AppPlansRoute
+  AppQuotationsRoute: typeof AppQuotationsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppSubscribersIdRoute: typeof AppSubscribersIdRoute
+  AppSubscribersNewRoute: typeof AppSubscribersNewRoute
+  AppSubscribersIndexRoute: typeof AppSubscribersIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppActivityRoute: AppActivityRoute,
+  AppAlertsRoute: AppAlertsRoute,
+  AppBranchesRoute: AppBranchesRoute,
+  AppDevicesRoute: AppDevicesRoute,
+  AppInvoicesRoute: AppInvoicesRoute,
+  AppLimitsRoute: AppLimitsRoute,
+  AppModulesRoute: AppModulesRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
+  AppPlansRoute: AppPlansRoute,
+  AppQuotationsRoute: AppQuotationsRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppSubscribersIdRoute: AppSubscribersIdRoute,
+  AppSubscribersNewRoute: AppSubscribersNewRoute,
+  AppSubscribersIndexRoute: AppSubscribersIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
