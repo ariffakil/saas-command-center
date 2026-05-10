@@ -274,9 +274,8 @@ function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-import { useState as useS } from "react";
 function ModuleToggle({ name, initial }: { name: string; initial: boolean }) {
-  const [on, setOn] = useS(initial);
+  const [on, setOn] = useState(initial);
   return (
     <div className="flex items-center justify-between rounded-lg border border-border bg-background p-3">
       <div className="text-sm font-medium">{name}</div>
