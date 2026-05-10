@@ -138,7 +138,7 @@ export function Th({ children, className }: { children?: ReactNode; className?: 
   );
 }
 
-export function Td({ children, className }: { children: ReactNode; className?: string }) {
+export function Td({ children, className }: { children?: ReactNode; className?: string }) {
   return <td className={cn("whitespace-nowrap px-4 py-3 text-sm text-card-foreground", className)}>{children}</td>;
 }
 
