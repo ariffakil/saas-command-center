@@ -8,8 +8,7 @@ export const Route = createFileRoute("/_app/invoices")({ component: () => (
     <PageHeader title="Invoices" description="Billing invoices across all subscribers." actions={<><Btn variant="outline"><Download className="h-4 w-4" /> Export</Btn><Btn><Plus className="h-4 w-4" /> New Invoice</Btn></>} />
     <TableShell>
       <thead className="bg-muted/40"><tr>
-        <Th>Invoice</Th><Th>Subscriber</Th><Th>Date</Th><Th>Due</Th><Th>Amount</Th><Th>Tax</Th><Th>Total</Th><Th>Status</Th><Th></Th>
-      </tr></thead>
+        <Th>Invoice</Th><Th>Subscriber</Th><Th>Date</Th><Th>Due</Th><Th>Amount</Th><Th>Tax</Th><Th>Total</Th><Th>Status</Th><Th /></tr></thead>
       <tbody className="divide-y divide-border">
         {invoices.map((i) => (
           <tr key={i.id} className="hover:bg-muted/30">

@@ -11,12 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppQuotationsRouteImport } from './routes/_app.quotations'
 import { Route as AppPlansRouteImport } from './routes/_app.plans'
+import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
 import { Route as AppModulesRouteImport } from './routes/_app.modules'
 import { Route as AppLimitsRouteImport } from './routes/_app.limits'
 import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppDevicesRouteImport } from './routes/_app.devices'
 import { Route as AppBranchesRouteImport } from './routes/_app.branches'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
+import { Route as AppActivityRouteImport } from './routes/_app.activity'
 import { Route as AppSubscribersIndexRouteImport } from './routes/_app.subscribers.index'
 import { Route as AppSubscribersNewRouteImport } from './routes/_app.subscribers.new'
 import { Route as AppSubscribersIdRouteImport } from './routes/_app.subscribers.$id'
@@ -30,9 +35,24 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuotationsRoute = AppQuotationsRouteImport.update({
+  id: '/quotations',
+  path: '/quotations',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPlansRoute = AppPlansRouteImport.update({
   id: '/plans',
   path: '/plans',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
   getParentRoute: () => AppRoute,
 } as any)
 const AppModulesRoute = AppModulesRouteImport.update({
@@ -60,6 +80,16 @@ const AppBranchesRoute = AppBranchesRouteImport.update({
   path: '/branches',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppActivityRoute = AppActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSubscribersIndexRoute = AppSubscribersIndexRouteImport.update({
   id: '/subscribers/',
   path: '/subscribers/',
@@ -78,23 +108,33 @@ const AppSubscribersIdRoute = AppSubscribersIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/activity': typeof AppActivityRoute
+  '/alerts': typeof AppAlertsRoute
   '/branches': typeof AppBranchesRoute
   '/devices': typeof AppDevicesRoute
   '/invoices': typeof AppInvoicesRoute
   '/limits': typeof AppLimitsRoute
   '/modules': typeof AppModulesRoute
+  '/payments': typeof AppPaymentsRoute
   '/plans': typeof AppPlansRoute
+  '/quotations': typeof AppQuotationsRoute
+  '/settings': typeof AppSettingsRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
   '/subscribers/new': typeof AppSubscribersNewRoute
   '/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesByTo {
+  '/activity': typeof AppActivityRoute
+  '/alerts': typeof AppAlertsRoute
   '/branches': typeof AppBranchesRoute
   '/devices': typeof AppDevicesRoute
   '/invoices': typeof AppInvoicesRoute
   '/limits': typeof AppLimitsRoute
   '/modules': typeof AppModulesRoute
+  '/payments': typeof AppPaymentsRoute
   '/plans': typeof AppPlansRoute
+  '/quotations': typeof AppQuotationsRoute
+  '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
   '/subscribers/new': typeof AppSubscribersNewRoute
@@ -103,12 +143,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
+  '/_app/activity': typeof AppActivityRoute
+  '/_app/alerts': typeof AppAlertsRoute
   '/_app/branches': typeof AppBranchesRoute
   '/_app/devices': typeof AppDevicesRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/limits': typeof AppLimitsRoute
   '/_app/modules': typeof AppModulesRoute
+  '/_app/payments': typeof AppPaymentsRoute
   '/_app/plans': typeof AppPlansRoute
+  '/_app/quotations': typeof AppQuotationsRoute
+  '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
   '/_app/subscribers/$id': typeof AppSubscribersIdRoute
   '/_app/subscribers/new': typeof AppSubscribersNewRoute
@@ -118,23 +163,33 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/activity'
+    | '/alerts'
     | '/branches'
     | '/devices'
     | '/invoices'
     | '/limits'
     | '/modules'
+    | '/payments'
     | '/plans'
+    | '/quotations'
+    | '/settings'
     | '/subscribers/$id'
     | '/subscribers/new'
     | '/subscribers/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/activity'
+    | '/alerts'
     | '/branches'
     | '/devices'
     | '/invoices'
     | '/limits'
     | '/modules'
+    | '/payments'
     | '/plans'
+    | '/quotations'
+    | '/settings'
     | '/'
     | '/subscribers/$id'
     | '/subscribers/new'
@@ -142,12 +197,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_app'
+    | '/_app/activity'
+    | '/_app/alerts'
     | '/_app/branches'
     | '/_app/devices'
     | '/_app/invoices'
     | '/_app/limits'
     | '/_app/modules'
+    | '/_app/payments'
     | '/_app/plans'
+    | '/_app/quotations'
+    | '/_app/settings'
     | '/_app/'
     | '/_app/subscribers/$id'
     | '/_app/subscribers/new'
@@ -174,11 +234,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quotations': {
+      id: '/_app/quotations'
+      path: '/quotations'
+      fullPath: '/quotations'
+      preLoaderRoute: typeof AppQuotationsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/plans': {
       id: '/_app/plans'
       path: '/plans'
       fullPath: '/plans'
       preLoaderRoute: typeof AppPlansRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/payments': {
+      id: '/_app/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/modules': {
@@ -216,6 +297,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBranchesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/activity': {
+      id: '/_app/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AppActivityRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/subscribers/': {
       id: '/_app/subscribers/'
       path: '/subscribers'
@@ -241,12 +336,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppActivityRoute: typeof AppActivityRoute
+  AppAlertsRoute: typeof AppAlertsRoute
   AppBranchesRoute: typeof AppBranchesRoute
   AppDevicesRoute: typeof AppDevicesRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppLimitsRoute: typeof AppLimitsRoute
   AppModulesRoute: typeof AppModulesRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
   AppPlansRoute: typeof AppPlansRoute
+  AppQuotationsRoute: typeof AppQuotationsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppSubscribersIdRoute: typeof AppSubscribersIdRoute
   AppSubscribersNewRoute: typeof AppSubscribersNewRoute
@@ -254,12 +354,17 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppActivityRoute: AppActivityRoute,
+  AppAlertsRoute: AppAlertsRoute,
   AppBranchesRoute: AppBranchesRoute,
   AppDevicesRoute: AppDevicesRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppLimitsRoute: AppLimitsRoute,
   AppModulesRoute: AppModulesRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
   AppPlansRoute: AppPlansRoute,
+  AppQuotationsRoute: AppQuotationsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
   AppSubscribersIdRoute: AppSubscribersIdRoute,
   AppSubscribersNewRoute: AppSubscribersNewRoute,
@@ -274,3 +379,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
