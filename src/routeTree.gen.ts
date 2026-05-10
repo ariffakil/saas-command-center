@@ -14,6 +14,7 @@ import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppPlansRouteImport } from './routes/_app.plans'
 import { Route as AppModulesRouteImport } from './routes/_app.modules'
 import { Route as AppLimitsRouteImport } from './routes/_app.limits'
+import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppDevicesRouteImport } from './routes/_app.devices'
 import { Route as AppBranchesRouteImport } from './routes/_app.branches'
 import { Route as AppSubscribersIndexRouteImport } from './routes/_app.subscribers.index'
@@ -42,6 +43,11 @@ const AppModulesRoute = AppModulesRouteImport.update({
 const AppLimitsRoute = AppLimitsRouteImport.update({
   id: '/limits',
   path: '/limits',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesRoute = AppInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDevicesRoute = AppDevicesRouteImport.update({
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/branches': typeof AppBranchesRoute
   '/devices': typeof AppDevicesRoute
+  '/invoices': typeof AppInvoicesRoute
   '/limits': typeof AppLimitsRoute
   '/modules': typeof AppModulesRoute
   '/plans': typeof AppPlansRoute
@@ -84,6 +91,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/branches': typeof AppBranchesRoute
   '/devices': typeof AppDevicesRoute
+  '/invoices': typeof AppInvoicesRoute
   '/limits': typeof AppLimitsRoute
   '/modules': typeof AppModulesRoute
   '/plans': typeof AppPlansRoute
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_app/branches': typeof AppBranchesRoute
   '/_app/devices': typeof AppDevicesRoute
+  '/_app/invoices': typeof AppInvoicesRoute
   '/_app/limits': typeof AppLimitsRoute
   '/_app/modules': typeof AppModulesRoute
   '/_app/plans': typeof AppPlansRoute
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/'
     | '/branches'
     | '/devices'
+    | '/invoices'
     | '/limits'
     | '/modules'
     | '/plans'
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
   to:
     | '/branches'
     | '/devices'
+    | '/invoices'
     | '/limits'
     | '/modules'
     | '/plans'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/_app/branches'
     | '/_app/devices'
+    | '/_app/invoices'
     | '/_app/limits'
     | '/_app/modules'
     | '/_app/plans'
@@ -183,6 +195,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLimitsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/invoices': {
+      id: '/_app/invoices'
+      path: '/invoices'
+      fullPath: '/invoices'
+      preLoaderRoute: typeof AppInvoicesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/devices': {
       id: '/_app/devices'
       path: '/devices'
@@ -224,6 +243,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppBranchesRoute: typeof AppBranchesRoute
   AppDevicesRoute: typeof AppDevicesRoute
+  AppInvoicesRoute: typeof AppInvoicesRoute
   AppLimitsRoute: typeof AppLimitsRoute
   AppModulesRoute: typeof AppModulesRoute
   AppPlansRoute: typeof AppPlansRoute
@@ -236,6 +256,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppBranchesRoute: AppBranchesRoute,
   AppDevicesRoute: AppDevicesRoute,
+  AppInvoicesRoute: AppInvoicesRoute,
   AppLimitsRoute: AppLimitsRoute,
   AppModulesRoute: AppModulesRoute,
   AppPlansRoute: AppPlansRoute,
