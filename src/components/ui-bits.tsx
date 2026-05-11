@@ -28,11 +28,21 @@ export function statusTone(s: string): Tone {
   return "neutral";
 }
 
-export function KpiCard({ label, value, hint, icon: Icon, tone = "primary" }: {
-  label: string; value: ReactNode; hint?: ReactNode; icon: React.ComponentType<{ className?: string }>; tone?: Tone;
+export function KpiCard({ label, value, hint, icon: Icon, tone = "primary", onClick }: {
+  label: string; value: ReactNode; hint?: ReactNode; icon: React.ComponentType<{ className?: string }>; tone?: Tone; onClick?: () => void;
 }) {
+  const interactive = !!onClick;
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm transition hover:shadow-md">
+    <div
+      role={interactive ? "button" : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={interactive ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(); } } : undefined}
+      className={cn(
+        "rounded-xl border border-border bg-card p-5 shadow-sm transition hover:shadow-md",
+        interactive && "cursor-pointer hover:border-primary/40 focus:outline-none focus:ring-2 focus:ring-ring/40",
+      )}
+    >
       <div className="flex items-start justify-between">
         <div>
           <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{label}</div>
