@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { quotations } from "@/lib/mock-data";
 import { PageHeader, TableShell, Th, Td, Badge, statusTone, Btn } from "@/components/ui-bits";
-import { Download, FileText, Plus } from "lucide-react";
+import { Eye, Download, FileText, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/_app/quotations")({ component: () => (
   <div>
@@ -19,7 +19,17 @@ export const Route = createFileRoute("/_app/quotations")({ component: () => (
             <Td className="text-xs text-muted-foreground">{q.users}u • {q.devices}d • {q.branches}b</Td>
             <Td className="font-semibold">${q.total.toLocaleString()}</Td>
             <Td><Badge tone={statusTone(q.status)}>{q.status}</Badge></Td>
-            <Td><div className="flex gap-1"><Btn variant="ghost" size="sm"><Download className="h-4 w-4" /></Btn><Btn variant="ghost" size="sm" title="Convert to invoice"><FileText className="h-4 w-4" /></Btn></div></Td>
+            <Td>
+              <div className="flex gap-1">
+                <Link to="/print/quotation/$id" params={{ id: q.id }} target="_blank" rel="noopener noreferrer" title="View / Download PDF">
+                  <Btn variant="ghost" size="sm"><Eye className="h-4 w-4" /></Btn>
+                </Link>
+                <Link to="/print/quotation/$id" params={{ id: q.id }} target="_blank" rel="noopener noreferrer" title="Download">
+                  <Btn variant="ghost" size="sm"><Download className="h-4 w-4" /></Btn>
+                </Link>
+                <Btn variant="ghost" size="sm" title="Convert to invoice"><FileText className="h-4 w-4" /></Btn>
+              </div>
+            </Td>
           </tr>
         ))}
       </tbody>

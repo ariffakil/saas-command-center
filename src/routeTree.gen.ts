@@ -23,6 +23,8 @@ import { Route as AppBranchesRouteImport } from './routes/_app.branches'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivityRouteImport } from './routes/_app.activity'
 import { Route as AppSubscribersIndexRouteImport } from './routes/_app.subscribers.index'
+import { Route as PrintQuotationIdRouteImport } from './routes/print.quotation.$id'
+import { Route as PrintInvoiceIdRouteImport } from './routes/print.invoice.$id'
 import { Route as AppSubscribersNewRouteImport } from './routes/_app.subscribers.new'
 import { Route as AppSubscribersIdRouteImport } from './routes/_app.subscribers.$id'
 
@@ -95,6 +97,16 @@ const AppSubscribersIndexRoute = AppSubscribersIndexRouteImport.update({
   path: '/subscribers/',
   getParentRoute: () => AppRoute,
 } as any)
+const PrintQuotationIdRoute = PrintQuotationIdRouteImport.update({
+  id: '/print/quotation/$id',
+  path: '/print/quotation/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrintInvoiceIdRoute = PrintInvoiceIdRouteImport.update({
+  id: '/print/invoice/$id',
+  path: '/print/invoice/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppSubscribersNewRoute = AppSubscribersNewRouteImport.update({
   id: '/subscribers/new',
   path: '/subscribers/new',
@@ -121,6 +133,8 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
   '/subscribers/new': typeof AppSubscribersNewRoute
+  '/print/invoice/$id': typeof PrintInvoiceIdRoute
+  '/print/quotation/$id': typeof PrintQuotationIdRoute
   '/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -138,6 +152,8 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
   '/subscribers/new': typeof AppSubscribersNewRoute
+  '/print/invoice/$id': typeof PrintInvoiceIdRoute
+  '/print/quotation/$id': typeof PrintQuotationIdRoute
   '/subscribers': typeof AppSubscribersIndexRoute
 }
 export interface FileRoutesById {
@@ -157,6 +173,8 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/_app/subscribers/$id': typeof AppSubscribersIdRoute
   '/_app/subscribers/new': typeof AppSubscribersNewRoute
+  '/print/invoice/$id': typeof PrintInvoiceIdRoute
+  '/print/quotation/$id': typeof PrintQuotationIdRoute
   '/_app/subscribers/': typeof AppSubscribersIndexRoute
 }
 export interface FileRouteTypes {
@@ -176,6 +194,8 @@ export interface FileRouteTypes {
     | '/settings'
     | '/subscribers/$id'
     | '/subscribers/new'
+    | '/print/invoice/$id'
+    | '/print/quotation/$id'
     | '/subscribers/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -193,6 +213,8 @@ export interface FileRouteTypes {
     | '/'
     | '/subscribers/$id'
     | '/subscribers/new'
+    | '/print/invoice/$id'
+    | '/print/quotation/$id'
     | '/subscribers'
   id:
     | '__root__'
@@ -211,11 +233,15 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/_app/subscribers/$id'
     | '/_app/subscribers/new'
+    | '/print/invoice/$id'
+    | '/print/quotation/$id'
     | '/_app/subscribers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
+  PrintInvoiceIdRoute: typeof PrintInvoiceIdRoute
+  PrintQuotationIdRoute: typeof PrintQuotationIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -318,6 +344,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSubscribersIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/print/quotation/$id': {
+      id: '/print/quotation/$id'
+      path: '/print/quotation/$id'
+      fullPath: '/print/quotation/$id'
+      preLoaderRoute: typeof PrintQuotationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/print/invoice/$id': {
+      id: '/print/invoice/$id'
+      path: '/print/invoice/$id'
+      fullPath: '/print/invoice/$id'
+      preLoaderRoute: typeof PrintInvoiceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/subscribers/new': {
       id: '/_app/subscribers/new'
       path: '/subscribers/new'
@@ -375,6 +415,8 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
+  PrintInvoiceIdRoute: PrintInvoiceIdRoute,
+  PrintQuotationIdRoute: PrintQuotationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
