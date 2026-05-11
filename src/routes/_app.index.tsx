@@ -6,11 +6,9 @@ import {
 } from "lucide-react";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, Legend,
 } from "recharts";
 import {
-  kpiSummary, monthlyRevenue, subscriberGrowth, accountStatusBreakdown,
-  moduleUsage, deviceStatus, renewalAlerts, subscribers, devices as devicesData,
+  kpiSummary, monthlyRevenue, renewalAlerts, subscribers, devices as devicesData,
   branches as branchesData, invoices,
 } from "@/lib/mock-data";
 import { KpiCard, PageHeader, Card, CardTitle, Badge, statusTone } from "@/components/ui-bits";
@@ -48,91 +46,6 @@ function Dashboard() {
         <KpiCard label="Total Branches" value={fmt(kpiSummary.totalBranches)} hint="32 added this quarter" icon={GitBranch} tone="primary" onClick={() => setOpenKpi("totalBranches")} />
         <KpiCard label="Pending Payments" value={money(kpiSummary.pendingPayments)} hint="3 invoices overdue" icon={AlertTriangle} tone="warning" onClick={() => setOpenKpi("pendingPayments")} />
         <KpiCard label="Upcoming Renewals" value={fmt(kpiSummary.upcomingRenewals)} hint="Next 30 days" icon={BellRing} tone="warning" onClick={() => setOpenKpi("upcomingRenewals")} />
-      </div>
-
-      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardTitle action={<Badge tone="success">+8.4%</Badge>}>Monthly Revenue</CardTitle>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={monthlyRevenue} margin={{ left: -10, right: 8, top: 8 }}>
-                <defs>
-                  <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.45} />
-                    <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={12} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
-                <Area type="monotone" dataKey="revenue" stroke="var(--primary)" strokeWidth={2} fill="url(#rev)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card>
-          <CardTitle>Account Status</CardTitle>
-          <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={accountStatusBreakdown} dataKey="value" innerRadius={55} outerRadius={90} paddingAngle={2}>
-                  {accountStatusBreakdown.map((e) => (<Cell key={e.name} fill={e.color} />))}
-                </Pie>
-                <Legend />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-      </div>
-
-      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card>
-          <CardTitle>Subscriber Growth</CardTitle>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={subscriberGrowth} margin={{ left: -10, right: 8, top: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={12} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
-                <Line type="monotone" dataKey="subscribers" stroke="var(--chart-2)" strokeWidth={2.5} dot={{ r: 3 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card>
-          <CardTitle>Module Usage</CardTitle>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={moduleUsage} margin={{ left: -10, right: 8, top: 8 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="module" stroke="var(--muted-foreground)" fontSize={11} interval={0} angle={-15} textAnchor="end" height={60} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
-                <Bar dataKey="count" fill="var(--primary)" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        <Card>
-          <CardTitle>Device Status</CardTitle>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={deviceStatus} dataKey="value" outerRadius={90}>
-                  {deviceStatus.map((e) => <Cell key={e.name} fill={e.color} />)}
-                </Pie>
-                <Legend />
-                <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
       </div>
 
       <div className="mt-6">
