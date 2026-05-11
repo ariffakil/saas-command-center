@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { invoices } from "@/lib/mock-data";
 import { PageHeader, TableShell, Th, Td, Badge, statusTone, Btn } from "@/components/ui-bits";
-import { Download, Mail, Plus } from "lucide-react";
+import { Eye, Download, Mail, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/_app/invoices")({ component: () => (
   <div>
@@ -17,7 +17,17 @@ export const Route = createFileRoute("/_app/invoices")({ component: () => (
             <Td>${i.amount.toLocaleString()}</Td><Td>${i.tax}</Td>
             <Td className="font-semibold">${i.total.toLocaleString()}</Td>
             <Td><Badge tone={statusTone(i.status)}>{i.status}</Badge></Td>
-            <Td><div className="flex gap-1"><Btn variant="ghost" size="sm"><Download className="h-4 w-4" /></Btn><Btn variant="ghost" size="sm"><Mail className="h-4 w-4" /></Btn></div></Td>
+            <Td>
+              <div className="flex gap-1">
+                <Link to="/print/invoice/$id" params={{ id: i.id }} target="_blank" rel="noopener noreferrer" title="View / Download PDF">
+                  <Btn variant="ghost" size="sm"><Eye className="h-4 w-4" /></Btn>
+                </Link>
+                <Link to="/print/invoice/$id" params={{ id: i.id }} target="_blank" rel="noopener noreferrer" title="Print">
+                  <Btn variant="ghost" size="sm"><Download className="h-4 w-4" /></Btn>
+                </Link>
+                <Btn variant="ghost" size="sm" title="Email"><Mail className="h-4 w-4" /></Btn>
+              </div>
+            </Td>
           </tr>
         ))}
       </tbody>
