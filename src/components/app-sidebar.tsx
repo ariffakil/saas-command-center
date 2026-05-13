@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Building2, UserPlus, CreditCard, ToggleLeft, Gauge,
-  GitBranch, Cpu, FileText, FileSpreadsheet, Wallet, BellRing, History, Settings, ScanFace, Package,
+  GitBranch, Cpu, FileText, FileSpreadsheet, Wallet, BellRing, History, Settings, ScanFace, Package, Radio,
 } from "lucide-react";
 
 const nav = [
@@ -21,6 +21,7 @@ const nav = [
   { group: "Operations", items: [
     { to: "/branches", label: "Branches", icon: GitBranch },
     { to: "/devices", label: "Devices", icon: Cpu },
+    { to: "/tracking", label: "Live Tracking", icon: Radio },
   ]},
   { group: "Billing", items: [
     { to: "/invoices", label: "Invoices", icon: FileText },
