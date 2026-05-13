@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppQuotationsRouteImport } from './routes/_app.quotations'
+import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppPlansRouteImport } from './routes/_app.plans'
 import { Route as AppPaymentsRouteImport } from './routes/_app.payments'
 import { Route as AppModulesRouteImport } from './routes/_app.modules'
@@ -45,6 +46,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
 const AppQuotationsRoute = AppQuotationsRouteImport.update({
   id: '/quotations',
   path: '/quotations',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProductsRoute = AppProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPlansRoute = AppPlansRouteImport.update({
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/modules': typeof AppModulesRoute
   '/payments': typeof AppPaymentsRoute
   '/plans': typeof AppPlansRoute
+  '/products': typeof AppProductsRoute
   '/quotations': typeof AppQuotationsRoute
   '/settings': typeof AppSettingsRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/modules': typeof AppModulesRoute
   '/payments': typeof AppPaymentsRoute
   '/plans': typeof AppPlansRoute
+  '/products': typeof AppProductsRoute
   '/quotations': typeof AppQuotationsRoute
   '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/_app/modules': typeof AppModulesRoute
   '/_app/payments': typeof AppPaymentsRoute
   '/_app/plans': typeof AppPlansRoute
+  '/_app/products': typeof AppProductsRoute
   '/_app/quotations': typeof AppQuotationsRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
@@ -190,6 +199,7 @@ export interface FileRouteTypes {
     | '/modules'
     | '/payments'
     | '/plans'
+    | '/products'
     | '/quotations'
     | '/settings'
     | '/subscribers/$id'
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/modules'
     | '/payments'
     | '/plans'
+    | '/products'
     | '/quotations'
     | '/settings'
     | '/'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/_app/modules'
     | '/_app/payments'
     | '/_app/plans'
+    | '/_app/products'
     | '/_app/quotations'
     | '/_app/settings'
     | '/_app/'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/quotations'
       fullPath: '/quotations'
       preLoaderRoute: typeof AppQuotationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/products': {
+      id: '/_app/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof AppProductsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/plans': {
@@ -385,6 +404,7 @@ interface AppRouteChildren {
   AppModulesRoute: typeof AppModulesRoute
   AppPaymentsRoute: typeof AppPaymentsRoute
   AppPlansRoute: typeof AppPlansRoute
+  AppProductsRoute: typeof AppProductsRoute
   AppQuotationsRoute: typeof AppQuotationsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -403,6 +423,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppModulesRoute: AppModulesRoute,
   AppPaymentsRoute: AppPaymentsRoute,
   AppPlansRoute: AppPlansRoute,
+  AppProductsRoute: AppProductsRoute,
   AppQuotationsRoute: AppQuotationsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
