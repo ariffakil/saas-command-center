@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppTrackingRouteImport } from './routes/_app.tracking'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppRemindersRouteImport } from './routes/_app.reminders'
 import { Route as AppQuotationsRouteImport } from './routes/_app.quotations'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppPlansRouteImport } from './routes/_app.plans'
@@ -48,6 +49,11 @@ const AppTrackingRoute = AppTrackingRouteImport.update({
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRemindersRoute = AppRemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
   getParentRoute: () => AppRoute,
 } as any)
 const AppQuotationsRoute = AppQuotationsRouteImport.update({
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/plans': typeof AppPlansRoute
   '/products': typeof AppProductsRoute
   '/quotations': typeof AppQuotationsRoute
+  '/reminders': typeof AppRemindersRoute
   '/settings': typeof AppSettingsRoute
   '/tracking': typeof AppTrackingRoute
   '/branches/map': typeof AppBranchesMapRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/plans': typeof AppPlansRoute
   '/products': typeof AppProductsRoute
   '/quotations': typeof AppQuotationsRoute
+  '/reminders': typeof AppRemindersRoute
   '/settings': typeof AppSettingsRoute
   '/tracking': typeof AppTrackingRoute
   '/': typeof AppIndexRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/_app/plans': typeof AppPlansRoute
   '/_app/products': typeof AppProductsRoute
   '/_app/quotations': typeof AppQuotationsRoute
+  '/_app/reminders': typeof AppRemindersRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/tracking': typeof AppTrackingRoute
   '/_app/': typeof AppIndexRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/plans'
     | '/products'
     | '/quotations'
+    | '/reminders'
     | '/settings'
     | '/tracking'
     | '/branches/map'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/plans'
     | '/products'
     | '/quotations'
+    | '/reminders'
     | '/settings'
     | '/tracking'
     | '/'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/_app/plans'
     | '/_app/products'
     | '/_app/quotations'
+    | '/_app/reminders'
     | '/_app/settings'
     | '/_app/tracking'
     | '/_app/'
@@ -308,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reminders': {
+      id: '/_app/reminders'
+      path: '/reminders'
+      fullPath: '/reminders'
+      preLoaderRoute: typeof AppRemindersRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/quotations': {
@@ -456,6 +475,7 @@ interface AppRouteChildren {
   AppPlansRoute: typeof AppPlansRoute
   AppProductsRoute: typeof AppProductsRoute
   AppQuotationsRoute: typeof AppQuotationsRoute
+  AppRemindersRoute: typeof AppRemindersRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTrackingRoute: typeof AppTrackingRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -476,6 +496,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPlansRoute: AppPlansRoute,
   AppProductsRoute: AppProductsRoute,
   AppQuotationsRoute: AppQuotationsRoute,
+  AppRemindersRoute: AppRemindersRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTrackingRoute: AppTrackingRoute,
   AppIndexRoute: AppIndexRoute,
@@ -494,3 +515,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
