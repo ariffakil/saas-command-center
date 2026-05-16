@@ -1,9 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import {
-  Building2, CheckCircle2, Sparkles, Users, Cpu, GitBranch, DollarSign,
-  AlertTriangle, BellRing, ArrowUpRight, TrendingUp, TrendingDown, Clock,
-  Activity, Zap, Wifi, WifiOff,
+  Building2, Users, Cpu, GitBranch, AlertTriangle, ArrowUpRight,
+  TrendingUp, TrendingDown, Clock, Activity, Zap, Wifi, WifiOff,
 } from "lucide-react";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
