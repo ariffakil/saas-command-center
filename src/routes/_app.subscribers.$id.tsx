@@ -282,6 +282,10 @@ function SubscriberDetail() {
           </div>
         )}
 
+        {tab === "License" && isDesktop && (
+          <DesktopLicense subscriberId={sub.id} expiry={sub.expiryDate} devices={subDevices} />
+        )}
+
         {tab === "Invoices" && (
           <TableShell>
             <thead className="bg-muted/40"><tr>
