@@ -1,13 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  ArrowLeft, Building2, Mail, Phone, MapPin, Pause, Play, Trash2,
+  ArrowLeft, Building2, Mail, Phone, MapPin, Pause, Play, Trash2, Plus, Pencil,
 } from "lucide-react";
 import {
   subscribers, moduleList, branches as allBranches, devices as allDevices,
   invoices as allInvoices, payments as allPayments, quotations, activityLogs,
+  type Branch,
 } from "@/lib/mock-data";
 import { PageHeader, Card, CardTitle, Btn, Badge, statusTone, Progress, TableShell, Th, Td } from "@/components/ui-bits";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_app/subscribers/$id")({
   component: SubscriberDetail,
@@ -31,10 +36,31 @@ type Tab = (typeof TABS)[number];
 function SubscriberDetail() {
   const { sub } = Route.useLoaderData();
   const [tab, setTab] = useState<Tab>("Overview");
-  const subBranches = allBranches.filter((b) => b.subscriberId === sub.id);
+  const [branchList, setBranchList] = useState<Branch[]>(
+    allBranches.filter((b) => b.subscriberId === sub.id),
+  );
+  const [branchDialog, setBranchDialog] = useState<{ open: boolean; editing?: Branch }>({ open: false });
   const subDevices = allDevices.filter((d) => d.subscriberId === sub.id);
   const subInvoices = allInvoices.filter((i) => i.subscriberId === sub.id);
   const subPayments = allPayments.filter((p) => p.subscriber === sub.company);
+
+  function saveBranch(data: Omit<Branch, "id" | "subscriberId" | "lat" | "lng">, editing?: Branch) {
+    if (editing) {
+      setBranchList((list) => list.map((b) => (b.id === editing.id ? { ...editing, ...data } : b)));
+    } else {
+      const newId = `BR-${Math.floor(Math.random() * 9000 + 1000)}`;
+      setBranchList((list) => [
+        ...list,
+        { id: newId, subscriberId: sub.id, lat: 0, lng: 0, ...data },
+      ]);
+    }
+    setBranchDialog({ open: false });
+  }
+
+  function deleteBranch(id: string) {
+    if (!confirm("Delete this branch?")) return;
+    setBranchList((list) => list.filter((b) => b.id !== id));
+  }
 
   return (
     <div>
@@ -193,20 +219,50 @@ function SubscriberDetail() {
         )}
 
         {tab === "Branches" && (
-          <TableShell>
-            <thead className="bg-muted/40"><tr>
-              <Th>Branch</Th><Th>Location</Th><Th>Manager</Th><Th>Users</Th><Th>Devices</Th><Th>Status</Th>
-            </tr></thead>
-            <tbody className="divide-y divide-border">
-              {subBranches.map((b)=>(
-                <tr key={b.id}>
-                  <Td>{b.name}</Td><Td>{b.location}</Td><Td>{b.manager}</Td>
-                  <Td>{b.users}</Td><Td>{b.devices}</Td>
-                  <Td><Badge tone={statusTone(b.status)}>{b.status}</Badge></Td>
-                </tr>
-              ))}
-            </tbody>
-          </TableShell>
+          <div className="space-y-3">
+            <div className="flex justify-end">
+              <Btn onClick={() => setBranchDialog({ open: true })}>
+                <Plus className="h-4 w-4" /> Add Branch
+              </Btn>
+            </div>
+            <TableShell>
+              <thead className="bg-muted/40"><tr>
+                <Th>Branch</Th><Th>Location</Th><Th>Manager</Th><Th>Phone</Th><Th>Users</Th><Th>Devices</Th><Th>Status</Th><Th>Actions</Th>
+              </tr></thead>
+              <tbody className="divide-y divide-border">
+                {branchList.map((b)=>(
+                  <tr key={b.id}>
+                    <Td><div className="font-medium">{b.name}</div><div className="text-xs text-muted-foreground">{b.id}</div></Td>
+                    <Td>{b.location}</Td><Td>{b.manager}</Td>
+                    <Td className="text-muted-foreground">{b.phone}</Td>
+                    <Td>{b.users}</Td><Td>{b.devices}</Td>
+                    <Td><Badge tone={statusTone(b.status)}>{b.status}</Badge></Td>
+                    <Td>
+                      <div className="flex gap-1">
+                        <button onClick={() => setBranchDialog({ open: true, editing: b })}
+                          className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label="Edit">
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button onClick={() => deleteBranch(b.id)}
+                          className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive" aria-label="Delete">
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </Td>
+                  </tr>
+                ))}
+                {branchList.length === 0 && (
+                  <tr><Td className="text-muted-foreground">No branches yet.</Td><Td></Td><Td></Td><Td></Td><Td></Td><Td></Td><Td></Td><Td></Td></tr>
+                )}
+              </tbody>
+            </TableShell>
+            <BranchDialog
+              open={branchDialog.open}
+              editing={branchDialog.editing}
+              onClose={() => setBranchDialog({ open: false })}
+              onSave={saveBranch}
+            />
+          </div>
         )}
 
         {tab === "Invoices" && (
