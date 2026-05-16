@@ -29,6 +29,7 @@ import { Route as PrintQuotationIdRouteImport } from './routes/print.quotation.$
 import { Route as PrintInvoiceIdRouteImport } from './routes/print.invoice.$id'
 import { Route as AppSubscribersNewRouteImport } from './routes/_app.subscribers.new'
 import { Route as AppSubscribersIdRouteImport } from './routes/_app.subscribers.$id'
+import { Route as AppBranchesMapRouteImport } from './routes/_app.branches.map'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -129,12 +130,17 @@ const AppSubscribersIdRoute = AppSubscribersIdRouteImport.update({
   path: '/subscribers/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBranchesMapRoute = AppBranchesMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => AppBranchesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/activity': typeof AppActivityRoute
   '/alerts': typeof AppAlertsRoute
-  '/branches': typeof AppBranchesRoute
+  '/branches': typeof AppBranchesRouteWithChildren
   '/devices': typeof AppDevicesRoute
   '/invoices': typeof AppInvoicesRoute
   '/limits': typeof AppLimitsRoute
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/quotations': typeof AppQuotationsRoute
   '/settings': typeof AppSettingsRoute
   '/tracking': typeof AppTrackingRoute
+  '/branches/map': typeof AppBranchesMapRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
   '/subscribers/new': typeof AppSubscribersNewRoute
   '/print/invoice/$id': typeof PrintInvoiceIdRoute
@@ -154,7 +161,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/activity': typeof AppActivityRoute
   '/alerts': typeof AppAlertsRoute
-  '/branches': typeof AppBranchesRoute
+  '/branches': typeof AppBranchesRouteWithChildren
   '/devices': typeof AppDevicesRoute
   '/invoices': typeof AppInvoicesRoute
   '/limits': typeof AppLimitsRoute
@@ -166,6 +173,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AppSettingsRoute
   '/tracking': typeof AppTrackingRoute
   '/': typeof AppIndexRoute
+  '/branches/map': typeof AppBranchesMapRoute
   '/subscribers/$id': typeof AppSubscribersIdRoute
   '/subscribers/new': typeof AppSubscribersNewRoute
   '/print/invoice/$id': typeof PrintInvoiceIdRoute
@@ -177,7 +185,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_app/activity': typeof AppActivityRoute
   '/_app/alerts': typeof AppAlertsRoute
-  '/_app/branches': typeof AppBranchesRoute
+  '/_app/branches': typeof AppBranchesRouteWithChildren
   '/_app/devices': typeof AppDevicesRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/limits': typeof AppLimitsRoute
@@ -189,6 +197,7 @@ export interface FileRoutesById {
   '/_app/settings': typeof AppSettingsRoute
   '/_app/tracking': typeof AppTrackingRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/branches/map': typeof AppBranchesMapRoute
   '/_app/subscribers/$id': typeof AppSubscribersIdRoute
   '/_app/subscribers/new': typeof AppSubscribersNewRoute
   '/print/invoice/$id': typeof PrintInvoiceIdRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/quotations'
     | '/settings'
     | '/tracking'
+    | '/branches/map'
     | '/subscribers/$id'
     | '/subscribers/new'
     | '/print/invoice/$id'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tracking'
     | '/'
+    | '/branches/map'
     | '/subscribers/$id'
     | '/subscribers/new'
     | '/print/invoice/$id'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/_app/settings'
     | '/_app/tracking'
     | '/_app/'
+    | '/_app/branches/map'
     | '/_app/subscribers/$id'
     | '/_app/subscribers/new'
     | '/print/invoice/$id'
@@ -410,13 +422,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSubscribersIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/branches/map': {
+      id: '/_app/branches/map'
+      path: '/map'
+      fullPath: '/branches/map'
+      preLoaderRoute: typeof AppBranchesMapRouteImport
+      parentRoute: typeof AppBranchesRoute
+    }
   }
 }
+
+interface AppBranchesRouteChildren {
+  AppBranchesMapRoute: typeof AppBranchesMapRoute
+}
+
+const AppBranchesRouteChildren: AppBranchesRouteChildren = {
+  AppBranchesMapRoute: AppBranchesMapRoute,
+}
+
+const AppBranchesRouteWithChildren = AppBranchesRoute._addFileChildren(
+  AppBranchesRouteChildren,
+)
 
 interface AppRouteChildren {
   AppActivityRoute: typeof AppActivityRoute
   AppAlertsRoute: typeof AppAlertsRoute
-  AppBranchesRoute: typeof AppBranchesRoute
+  AppBranchesRoute: typeof AppBranchesRouteWithChildren
   AppDevicesRoute: typeof AppDevicesRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppLimitsRoute: typeof AppLimitsRoute
@@ -436,7 +467,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppActivityRoute: AppActivityRoute,
   AppAlertsRoute: AppAlertsRoute,
-  AppBranchesRoute: AppBranchesRoute,
+  AppBranchesRoute: AppBranchesRouteWithChildren,
   AppDevicesRoute: AppDevicesRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppLimitsRoute: AppLimitsRoute,

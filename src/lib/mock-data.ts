@@ -45,16 +45,17 @@ export const moduleList = [
 export interface Branch {
   id: string; subscriberId: string; name: string; location: string;
   manager: string; phone: string; users: number; devices: number; status: "Active" | "Inactive";
+  lat: number; lng: number;
 }
 export const branches: Branch[] = [
-  { id: "BR-001", subscriberId: "SUB-1001", name: "Dubai HQ", location: "Dubai, UAE", manager: "Hassan Ali", phone: "+971 4 123 4567", users: 180, devices: 12, status: "Active" },
-  { id: "BR-002", subscriberId: "SUB-1001", name: "Abu Dhabi Branch", location: "Abu Dhabi, UAE", manager: "Mariam Saleh", phone: "+971 2 234 5678", users: 95, devices: 8, status: "Active" },
-  { id: "BR-003", subscriberId: "SUB-1003", name: "Doha Main Hospital", location: "Doha, Qatar", manager: "Dr. Aisha Faris", phone: "+974 44 567 890", users: 320, devices: 18, status: "Active" },
-  { id: "BR-004", subscriberId: "SUB-1003", name: "West Bay Clinic", location: "West Bay, Qatar", manager: "Nora Salim", phone: "+974 44 890 123", users: 110, devices: 9, status: "Active" },
-  { id: "BR-005", subscriberId: "SUB-1009", name: "Beirut Central", location: "Beirut, Lebanon", manager: "Tariq Sayegh", phone: "+961 1 345 678", users: 220, devices: 15, status: "Active" },
-  { id: "BR-006", subscriberId: "SUB-1006", name: "London Mayfair", location: "London, UK", manager: "Eleanor Brooks", phone: "+44 20 7946 0123", users: 45, devices: 5, status: "Active" },
-  { id: "BR-007", subscriberId: "SUB-1011", name: "Oslo Operations", location: "Oslo, Norway", manager: "Sven Berg", phone: "+47 22 12 34 56", users: 140, devices: 10, status: "Active" },
-  { id: "BR-008", subscriberId: "SUB-1007", name: "Cairo Plant", location: "Cairo, Egypt", manager: "Karim Fouad", phone: "+20 2 2345 6789", users: 60, devices: 6, status: "Inactive" },
+  { id: "BR-001", subscriberId: "SUB-1001", name: "Dubai HQ", location: "Dubai, UAE", manager: "Hassan Ali", phone: "+971 4 123 4567", users: 180, devices: 12, status: "Active", lat: 25.2048, lng: 55.2708 },
+  { id: "BR-002", subscriberId: "SUB-1001", name: "Abu Dhabi Branch", location: "Abu Dhabi, UAE", manager: "Mariam Saleh", phone: "+971 2 234 5678", users: 95, devices: 8, status: "Active", lat: 24.4539, lng: 54.3773 },
+  { id: "BR-003", subscriberId: "SUB-1003", name: "Doha Main Hospital", location: "Doha, Qatar", manager: "Dr. Aisha Faris", phone: "+974 44 567 890", users: 320, devices: 18, status: "Active", lat: 25.2854, lng: 51.5310 },
+  { id: "BR-004", subscriberId: "SUB-1003", name: "West Bay Clinic", location: "West Bay, Qatar", manager: "Nora Salim", phone: "+974 44 890 123", users: 110, devices: 9, status: "Active", lat: 25.3243, lng: 51.5310 },
+  { id: "BR-005", subscriberId: "SUB-1009", name: "Beirut Central", location: "Beirut, Lebanon", manager: "Tariq Sayegh", phone: "+961 1 345 678", users: 220, devices: 15, status: "Active", lat: 33.8938, lng: 35.5018 },
+  { id: "BR-006", subscriberId: "SUB-1006", name: "London Mayfair", location: "London, UK", manager: "Eleanor Brooks", phone: "+44 20 7946 0123", users: 45, devices: 5, status: "Active", lat: 51.5074, lng: -0.1278 },
+  { id: "BR-007", subscriberId: "SUB-1011", name: "Oslo Operations", location: "Oslo, Norway", manager: "Sven Berg", phone: "+47 22 12 34 56", users: 140, devices: 10, status: "Active", lat: 59.9139, lng: 10.7522 },
+  { id: "BR-008", subscriberId: "SUB-1007", name: "Cairo Plant", location: "Cairo, Egypt", manager: "Karim Fouad", phone: "+20 2 2345 6789", users: 60, devices: 6, status: "Inactive", lat: 30.0444, lng: 31.2357 },
 ];
 
 export interface Device {
