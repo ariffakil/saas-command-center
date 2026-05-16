@@ -430,3 +430,105 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </label>
   );
 }
+
+type DeviceLite = {
+  id: string; name: string; serial: string; branch: string;
+  type: string; online: boolean;
+};
+
+function DesktopLicense({
+  subscriberId, expiry, devices,
+}: { subscriberId: string; expiry: string; devices: DeviceLite[] }) {
+  const [serial, setSerial] = useState("");
+  const [license, setLicense] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  function generate(s: string) {
+    if (!s.trim()) return;
+    setSerial(s);
+    setLicense(generateLicense({ subscriberId, serial: s, expiry }));
+    setCopied(false);
+  }
+
+  function copy() {
+    if (!license) return;
+    navigator.clipboard.writeText(license);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardTitle>Generate Activation License</CardTitle>
+        <p className="mb-3 text-sm text-muted-foreground">
+          Activation keys are bound to the device serial number and the subscription expiry date.
+        </p>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Input
+            placeholder="Enter device serial number (e.g. FX-2024-0001)"
+            value={serial}
+            onChange={(e) => setSerial(e.target.value)}
+            className="font-mono"
+          />
+          <Btn onClick={() => generate(serial)}>
+            <Key className="h-4 w-4" /> Generate
+          </Btn>
+        </div>
+
+        {license && (
+          <div className="mt-4 rounded-lg border border-border bg-muted/40 p-4">
+            <div className="mb-2 flex items-center justify-between">
+              <div className="text-xs uppercase tracking-wide text-muted-foreground">Activation Key</div>
+              <button
+                onClick={copy}
+                className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
+              >
+                {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
+            <div className="break-all font-mono text-lg font-semibold tracking-wider">{license}</div>
+            <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+              <div>Serial: <span className="font-mono">{serial.toUpperCase()}</span></div>
+              <div>Valid until: <span className="font-mono">{expiry}</span></div>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      <Card>
+        <CardTitle>Registered Devices</CardTitle>
+        <p className="mb-3 text-sm text-muted-foreground">
+          Click a device to generate its license instantly.
+        </p>
+        <TableShell>
+          <thead className="bg-muted/40"><tr>
+            <Th>Device</Th><Th>Serial</Th><Th>Branch</Th><Th>Status</Th><Th></Th>
+          </tr></thead>
+          <tbody className="divide-y divide-border">
+            {devices.map((d) => (
+              <tr key={d.id} className="hover:bg-muted/30">
+                <Td>{d.name}</Td>
+                <Td className="font-mono text-muted-foreground">{d.serial}</Td>
+                <Td>{d.branch}</Td>
+                <Td><Badge tone={d.online ? "success" : "danger"}>{d.online ? "Online" : "Offline"}</Badge></Td>
+                <Td>
+                  <button
+                    onClick={() => generate(d.serial)}
+                    className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs hover:bg-muted"
+                  >
+                    <Key className="h-3 w-3" /> Generate
+                  </button>
+                </Td>
+              </tr>
+            ))}
+            {devices.length === 0 && (
+              <tr><Td className="text-muted-foreground">No devices registered yet.</Td><Td></Td><Td></Td><Td></Td><Td></Td></tr>
+            )}
+          </tbody>
+        </TableShell>
+      </Card>
+    </div>
+  );
+}
