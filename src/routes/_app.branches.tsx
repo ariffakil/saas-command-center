@@ -1,11 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { branches, subscribers } from "@/lib/mock-data";
 import { PageHeader, TableShell, Th, Td, Badge, statusTone, Btn } from "@/components/ui-bits";
-import { Plus } from "lucide-react";
+import { Plus, Map } from "lucide-react";
 
 export const Route = createFileRoute("/_app/branches")({ component: () => (
   <div>
-    <PageHeader title="Branches" description="All subscriber branches." actions={<Btn><Plus className="h-4 w-4" /> Add Branch</Btn>} />
+    <PageHeader title="Branches" description="All subscriber branches." actions={
+      <div className="flex gap-2">
+        <Link to="/branches/map" className="inline-flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm hover:bg-muted">
+          <Map className="h-4 w-4" /> Live Map
+        </Link>
+        <Btn><Plus className="h-4 w-4" /> Add Branch</Btn>
+      </div>
+    } />
     <TableShell>
       <thead className="bg-muted/40"><tr>
         <Th>Branch</Th><Th>Subscriber</Th><Th>Location</Th><Th>Manager</Th><Th>Phone</Th><Th>Users</Th><Th>Devices</Th><Th>Status</Th>
