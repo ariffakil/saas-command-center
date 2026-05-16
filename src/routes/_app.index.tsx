@@ -14,7 +14,7 @@ import {
   devices as devicesData, invoices, moduleUsage, accountStatusBreakdown,
   activityLogs,
 } from "@/lib/mock-data";
-import { PageHeader, Badge, statusTone } from "@/components/ui-bits";
+import { Badge } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/_app/")({ component: Dashboard });
 
@@ -413,5 +413,3 @@ function HealthBar({ icon: Icon, label, value, total, tone }: { icon: React.Comp
   );
 }
 
-// PageHeader kept exported elsewhere; keep import surface clean
-export { PageHeader };
