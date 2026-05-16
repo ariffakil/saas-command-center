@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import React, { useState } from "react";
 import {
   ArrowLeft, Building2, Mail, Phone, MapPin, Pause, Play, Trash2, Plus, Pencil,
+  Cloud, Monitor, Key, Copy, Check,
 } from "lucide-react";
 import {
   subscribers, moduleList, branches as allBranches, devices as allDevices,
@@ -13,6 +14,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { generateLicense } from "@/lib/license";
 
 export const Route = createFileRoute("/_app/subscribers/$id")({
   component: SubscriberDetail,
@@ -30,11 +32,18 @@ export const Route = createFileRoute("/_app/subscribers/$id")({
   errorComponent: ({ error }) => <div className="p-6 text-destructive">{error.message}</div>,
 });
 
-const TABS = ["Overview", "Subscription", "Modules", "Users", "Devices", "Branches", "Invoices", "Quotations", "Payments", "Activity"] as const;
-type Tab = (typeof TABS)[number];
+type Tab =
+  | "Overview" | "Subscription" | "Modules" | "Users" | "Devices" | "Branches"
+  | "License" | "Invoices" | "Quotations" | "Payments" | "Activity";
 
 function SubscriberDetail() {
   const { sub } = Route.useLoaderData();
+  const isDesktop = sub.deployment === "Desktop";
+  const TABS: Tab[] = [
+    "Overview", "Subscription", "Modules", "Users", "Devices", "Branches",
+    ...(isDesktop ? (["License"] as Tab[]) : []),
+    "Invoices", "Quotations", "Payments", "Activity",
+  ];
   const [tab, setTab] = useState<Tab>("Overview");
   const [branchList, setBranchList] = useState<Branch[]>(
     allBranches.filter((b) => b.subscriberId === sub.id),
@@ -88,7 +97,15 @@ function SubscriberDetail() {
             </div>
             <div>
               <div className="text-sm font-semibold">{sub.holder}</div>
-              <Badge tone={statusTone(sub.status)}>{sub.status}</Badge>
+              <div className="flex flex-wrap items-center gap-1">
+                <Badge tone={statusTone(sub.status)}>{sub.status}</Badge>
+                <Badge tone={isDesktop ? "warning" : "info"}>
+                  <span className="inline-flex items-center gap-1">
+                    {isDesktop ? <Monitor className="h-3 w-3" /> : <Cloud className="h-3 w-3" />}
+                    {sub.deployment}
+                  </span>
+                </Badge>
+              </div>
             </div>
           </div>
           <div className="space-y-2 text-sm text-muted-foreground">
