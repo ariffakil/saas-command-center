@@ -345,3 +345,67 @@ function ModuleToggle({ name, initial }: { name: string; initial: boolean }) {
     </div>
   );
 }
+
+function BranchDialog({
+  open, editing, onClose, onSave,
+}: {
+  open: boolean;
+  editing?: Branch;
+  onClose: () => void;
+  onSave: (data: Omit<Branch, "id" | "subscriberId" | "lat" | "lng">, editing?: Branch) => void;
+}) {
+  const [form, setForm] = useState({
+    name: "", location: "", manager: "", phone: "",
+    users: 0, devices: 0, status: "Active" as "Active" | "Inactive",
+  });
+
+  React.useEffect(() => {
+    if (open) {
+      setForm(editing ? {
+        name: editing.name, location: editing.location, manager: editing.manager,
+        phone: editing.phone, users: editing.users, devices: editing.devices, status: editing.status,
+      } : { name: "", location: "", manager: "", phone: "", users: 0, devices: 0, status: "Active" });
+    }
+  }, [open, editing]);
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{editing ? "Edit Branch" : "Add Branch"}</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Field label="Branch Name"><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Field>
+          <Field label="Location"><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></Field>
+          <Field label="Manager"><Input value={form.manager} onChange={(e) => setForm({ ...form, manager: e.target.value })} /></Field>
+          <Field label="Phone"><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Field>
+          <Field label="Users"><Input type="number" value={form.users} onChange={(e) => setForm({ ...form, users: Number(e.target.value) })} /></Field>
+          <Field label="Devices"><Input type="number" value={form.devices} onChange={(e) => setForm({ ...form, devices: Number(e.target.value) })} /></Field>
+          <Field label="Status">
+            <select value={form.status}
+              onChange={(e) => setForm({ ...form, status: e.target.value as "Active" | "Inactive" })}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </Field>
+        </div>
+        <DialogFooter>
+          <Btn variant="outline" onClick={onClose}>Cancel</Btn>
+          <Btn onClick={() => { if (!form.name.trim()) return; onSave(form, editing); }}>
+            {editing ? "Save Changes" : "Add Branch"}
+          </Btn>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="space-y-1.5 text-sm">
+      <div className="text-muted-foreground">{label}</div>
+      {children}
+    </label>
+  );
+}
