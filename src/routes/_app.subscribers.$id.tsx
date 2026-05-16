@@ -1,13 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
-  ArrowLeft, Building2, Mail, Phone, MapPin, Pause, Play, Trash2,
+  ArrowLeft, Building2, Mail, Phone, MapPin, Pause, Play, Trash2, Plus, Pencil,
 } from "lucide-react";
 import {
   subscribers, moduleList, branches as allBranches, devices as allDevices,
   invoices as allInvoices, payments as allPayments, quotations, activityLogs,
+  type Branch,
 } from "@/lib/mock-data";
 import { PageHeader, Card, CardTitle, Btn, Badge, statusTone, Progress, TableShell, Th, Td } from "@/components/ui-bits";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/_app/subscribers/$id")({
   component: SubscriberDetail,
@@ -31,10 +36,31 @@ type Tab = (typeof TABS)[number];
 function SubscriberDetail() {
   const { sub } = Route.useLoaderData();
   const [tab, setTab] = useState<Tab>("Overview");
-  const subBranches = allBranches.filter((b) => b.subscriberId === sub.id);
+  const [branchList, setBranchList] = useState<Branch[]>(
+    allBranches.filter((b) => b.subscriberId === sub.id),
+  );
+  const [branchDialog, setBranchDialog] = useState<{ open: boolean; editing?: Branch }>({ open: false });
   const subDevices = allDevices.filter((d) => d.subscriberId === sub.id);
   const subInvoices = allInvoices.filter((i) => i.subscriberId === sub.id);
   const subPayments = allPayments.filter((p) => p.subscriber === sub.company);
+
+  function saveBranch(data: Omit<Branch, "id" | "subscriberId" | "lat" | "lng">, editing?: Branch) {
+    if (editing) {
+      setBranchList((list) => list.map((b) => (b.id === editing.id ? { ...editing, ...data } : b)));
+    } else {
+      const newId = `BR-${Math.floor(Math.random() * 9000 + 1000)}`;
+      setBranchList((list) => [
+        ...list,
+        { id: newId, subscriberId: sub.id, lat: 0, lng: 0, ...data },
+      ]);
+    }
+    setBranchDialog({ open: false });
+  }
+
+  function deleteBranch(id: string) {
+    if (!confirm("Delete this branch?")) return;
+    setBranchList((list) => list.filter((b) => b.id !== id));
+  }
 
   return (
     <div>
@@ -193,20 +219,50 @@ function SubscriberDetail() {
         )}
 
         {tab === "Branches" && (
-          <TableShell>
-            <thead className="bg-muted/40"><tr>
-              <Th>Branch</Th><Th>Location</Th><Th>Manager</Th><Th>Users</Th><Th>Devices</Th><Th>Status</Th>
-            </tr></thead>
-            <tbody className="divide-y divide-border">
-              {subBranches.map((b)=>(
-                <tr key={b.id}>
-                  <Td>{b.name}</Td><Td>{b.location}</Td><Td>{b.manager}</Td>
-                  <Td>{b.users}</Td><Td>{b.devices}</Td>
-                  <Td><Badge tone={statusTone(b.status)}>{b.status}</Badge></Td>
-                </tr>
-              ))}
-            </tbody>
-          </TableShell>
+          <div className="space-y-3">
+            <div className="flex justify-end">
+              <Btn onClick={() => setBranchDialog({ open: true })}>
+                <Plus className="h-4 w-4" /> Add Branch
+              </Btn>
+            </div>
+            <TableShell>
+              <thead className="bg-muted/40"><tr>
+                <Th>Branch</Th><Th>Location</Th><Th>Manager</Th><Th>Phone</Th><Th>Users</Th><Th>Devices</Th><Th>Status</Th><Th>Actions</Th>
+              </tr></thead>
+              <tbody className="divide-y divide-border">
+                {branchList.map((b)=>(
+                  <tr key={b.id}>
+                    <Td><div className="font-medium">{b.name}</div><div className="text-xs text-muted-foreground">{b.id}</div></Td>
+                    <Td>{b.location}</Td><Td>{b.manager}</Td>
+                    <Td className="text-muted-foreground">{b.phone}</Td>
+                    <Td>{b.users}</Td><Td>{b.devices}</Td>
+                    <Td><Badge tone={statusTone(b.status)}>{b.status}</Badge></Td>
+                    <Td>
+                      <div className="flex gap-1">
+                        <button onClick={() => setBranchDialog({ open: true, editing: b })}
+                          className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label="Edit">
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button onClick={() => deleteBranch(b.id)}
+                          className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive" aria-label="Delete">
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </Td>
+                  </tr>
+                ))}
+                {branchList.length === 0 && (
+                  <tr><Td className="text-muted-foreground">No branches yet.</Td><Td></Td><Td></Td><Td></Td><Td></Td><Td></Td><Td></Td><Td></Td></tr>
+                )}
+              </tbody>
+            </TableShell>
+            <BranchDialog
+              open={branchDialog.open}
+              editing={branchDialog.editing}
+              onClose={() => setBranchDialog({ open: false })}
+              onSave={saveBranch}
+            />
+          </div>
         )}
 
         {tab === "Invoices" && (
@@ -287,5 +343,69 @@ function ModuleToggle({ name, initial }: { name: string; initial: boolean }) {
         <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${on ? "left-5" : "left-0.5"}`} />
       </button>
     </div>
+  );
+}
+
+function BranchDialog({
+  open, editing, onClose, onSave,
+}: {
+  open: boolean;
+  editing?: Branch;
+  onClose: () => void;
+  onSave: (data: Omit<Branch, "id" | "subscriberId" | "lat" | "lng">, editing?: Branch) => void;
+}) {
+  const [form, setForm] = useState({
+    name: "", location: "", manager: "", phone: "",
+    users: 0, devices: 0, status: "Active" as "Active" | "Inactive",
+  });
+
+  React.useEffect(() => {
+    if (open) {
+      setForm(editing ? {
+        name: editing.name, location: editing.location, manager: editing.manager,
+        phone: editing.phone, users: editing.users, devices: editing.devices, status: editing.status,
+      } : { name: "", location: "", manager: "", phone: "", users: 0, devices: 0, status: "Active" });
+    }
+  }, [open, editing]);
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{editing ? "Edit Branch" : "Add Branch"}</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Field label="Branch Name"><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Field>
+          <Field label="Location"><Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></Field>
+          <Field label="Manager"><Input value={form.manager} onChange={(e) => setForm({ ...form, manager: e.target.value })} /></Field>
+          <Field label="Phone"><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Field>
+          <Field label="Users"><Input type="number" value={form.users} onChange={(e) => setForm({ ...form, users: Number(e.target.value) })} /></Field>
+          <Field label="Devices"><Input type="number" value={form.devices} onChange={(e) => setForm({ ...form, devices: Number(e.target.value) })} /></Field>
+          <Field label="Status">
+            <select value={form.status}
+              onChange={(e) => setForm({ ...form, status: e.target.value as "Active" | "Inactive" })}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </Field>
+        </div>
+        <DialogFooter>
+          <Btn variant="outline" onClick={onClose}>Cancel</Btn>
+          <Btn onClick={() => { if (!form.name.trim()) return; onSave(form, editing); }}>
+            {editing ? "Save Changes" : "Add Branch"}
+          </Btn>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="space-y-1.5 text-sm">
+      <div className="text-muted-foreground">{label}</div>
+      {children}
+    </label>
   );
 }
