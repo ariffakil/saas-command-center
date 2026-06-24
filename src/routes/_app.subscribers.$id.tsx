@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import React, { useState } from "react";
 import {
   ArrowLeft, Building2, Mail, Phone, MapPin, Pause, Play, Trash2, Plus, Pencil,
-  Cloud, Monitor, Key, Copy, Check,
+  Cloud, Monitor, Key, Copy, Check, RefreshCw, Calendar, CheckCircle2, FileText,
 } from "lucide-react";
 import {
   subscribers, moduleList, branches as allBranches, devices as allDevices,
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/_app/subscribers/$id")({
 
 type Tab =
   | "Overview" | "Subscription" | "Modules" | "Users" | "Devices" | "Branches"
-  | "License" | "Invoices" | "Quotations" | "Payments" | "Activity";
+  | "License" | "Renew" | "Invoices" | "Quotations" | "Payments" | "Activity";
 
 function SubscriberDetail() {
   const { sub } = Route.useLoaderData();
@@ -42,9 +42,14 @@ function SubscriberDetail() {
   const TABS: Tab[] = [
     "Overview", "Subscription", "Modules", "Users", "Devices", "Branches",
     ...(isDesktop ? (["License"] as Tab[]) : []),
-    "Invoices", "Quotations", "Payments", "Activity",
+    "Renew", "Invoices", "Quotations", "Payments", "Activity",
   ];
   const [tab, setTab] = useState<Tab>("Overview");
+  const [currentExpiry, setCurrentExpiry] = useState<string>(sub.expiryDate);
+  const [currentPlan, setCurrentPlan] = useState<string>(sub.plan);
+  const [renewalHistory, setRenewalHistory] = useState<
+    { id: string; date: string; from: string; to: string; plan: string; term: string; amount: number; method: string; invoice: string }[]
+  >([]);
   const [branchList, setBranchList] = useState<Branch[]>(
     allBranches.filter((b) => b.subscriberId === sub.id),
   );
@@ -284,6 +289,21 @@ function SubscriberDetail() {
 
         {tab === "License" && isDesktop && (
           <DesktopLicense subscriberId={sub.id} expiry={sub.expiryDate} devices={subDevices} />
+        )}
+
+        {tab === "Renew" && (
+          <RenewPanel
+            subscriberId={sub.id}
+            plan={currentPlan}
+            expiry={currentExpiry}
+            monthlyValue={sub.monthlyValue}
+            history={renewalHistory}
+            onRenew={(entry, newExpiry, newPlan) => {
+              setCurrentExpiry(newExpiry);
+              setCurrentPlan(newPlan);
+              setRenewalHistory((h) => [entry, ...h]);
+            }}
+          />
         )}
 
         {tab === "Invoices" && (
