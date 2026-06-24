@@ -493,7 +493,7 @@ function RenewPanel({
   const planRate: Record<string, number> = {
     Trial: 0, Basic: 850, Professional: 2200, Enterprise: 5400,
   };
-  const baseMonthly = planRate[selectedPlan] ?? monthlyValue || 1000;
+  const baseMonthly = planRate[selectedPlan] ?? (monthlyValue || 1000);
   const term = TERMS[termIdx];
   const subtotal = baseMonthly * term.months;
   const discount = Math.round(subtotal * term.discount);
